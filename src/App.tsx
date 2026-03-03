@@ -935,10 +935,13 @@ const EnvelopeReveal: React.FC<{ stats: { score: number, stackCount: number, tic
 const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void }> = ({ onSubmit }) => {
   const [data, setData] = useState<QualificationData>({ timeline: '', budget: '', portals: [] });
   const [otherPortal, setOtherPortal] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : '' });
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    await onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : '' });
   };
 
   const togglePortal = (portal: string) => {
@@ -1071,12 +1074,25 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
         <div className="p-6 bg-gray-50 border-t border-gray-100 shrink-0">
           <button 
             onClick={handleSubmit}
-            className="w-full py-4 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-400 font-extrabold text-2xl rounded-xl shadow-inner cursor-not-allowed transition-all data-[ready=true]:from-amber-400 data-[ready=true]:to-amber-500 data-[ready=true]:text-emerald-900 data-[ready=true]:shadow-xl data-[ready=true]:cursor-pointer data-[ready=true]:hover:-translate-y-1"
-            data-ready={data.timeline && data.budget && data.portals.length > 0}
-            disabled={!data.timeline || !data.budget || data.portals.length === 0}
+            className="w-full py-4 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-400 font-extrabold text-2xl rounded-xl shadow-inner cursor-not-allowed transition-all data-[ready=true]:from-amber-400 data-[ready=true]:to-amber-500 data-[ready=true]:text-emerald-900 data-[ready=true]:shadow-xl data-[ready=true]:cursor-pointer data-[ready=true]:hover:-translate-y-1 data-[loading=true]:from-amber-300 data-[loading=true]:to-amber-400 data-[loading=true]:text-emerald-900 data-[loading=true]:cursor-wait"
+            data-ready={!isSubmitting && !!(data.timeline && data.budget && data.portals.length > 0)}
+            data-loading={isSubmitting}
+            disabled={!data.timeline || !data.budget || data.portals.length === 0 || isSubmitting}
           >
-            REVEAL REWARD ⚡
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-3">
+                <Loader2 className="w-6 h-6 animate-spin" />
+                Unlocking your Rezeki...
+              </span>
+            ) : (
+              'REVEAL REWARD ⚡'
+            )}
           </button>
+          {isSubmitting && (
+            <p className="text-center text-sm text-emerald-700 font-medium mt-3 animate-pulse">
+              Hang tight! We are preparing your reward...
+            </p>
+          )}
         </div>
       </div>
     </motion.div>
