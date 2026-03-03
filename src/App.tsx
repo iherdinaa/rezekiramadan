@@ -41,6 +41,41 @@ interface QualificationData {
   otherPortal: string;
 }
 
+// Sends payload to Google Sheet. Uses the Vite dev-server middleware (/api/submit)
+// when available; falls back to calling the Apps Script webhook directly with
+// mode:'no-cors' + Content-Type:text/plain (a CORS "simple request" — no preflight,
+// body is received by Apps Script via e.postData.contents).
+async function postToSheet(payload: Record<string, unknown>): Promise<void> {
+  const webhookUrl = import.meta.env.VITE_SHEET_WEBHOOK_URL as string | undefined;
+
+  // Try the Vite middleware proxy first (dev environment)
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return;
+  } catch {
+    // Middleware not available — fall through to direct call
+  }
+
+  // Direct call to Apps Script (production / when proxy is unavailable)
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        // text/plain avoids CORS preflight; Apps Script reads body via e.postData.contents
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error('[v0] Failed to post to sheet:', err);
+    }
+  }
+}
+
 // Read UTM params from URL once at module level (stable across renders)
 function getUtmParams() {
   const params = new URLSearchParams(window.location.search);
@@ -74,16 +109,12 @@ export default function App() {
       clickCountsRef.current = next;
       return next;
     });
-    fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_type:   type,
-        email:        userData.email,
-        company_name: userData.companyName,
-        ...utmParams,
-      }),
-    }).catch(() => {});
+    postToSheet({
+      event_type:   type,
+      email:        userData.email,
+      company_name: userData.companyName,
+      ...utmParams,
+    });
   };
 
   // Initialize Background Music
@@ -209,18 +240,7 @@ export default function App() {
       ...utmParams,
     };
 
-    // POST via local Express proxy to avoid CORS issues with Google Apps Script
-    try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const result = await res.json();
-      console.log('[v0] Sheet submission result:', result);
-    } catch (err) {
-      console.error('[v0] Failed to submit to sheet:', err);
-    }
+    await postToSheet(payload);
 
     setGameState('RESULT');
   };
