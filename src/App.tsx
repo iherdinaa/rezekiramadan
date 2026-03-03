@@ -107,6 +107,17 @@ export default function App() {
   }, []);
 
   const handleStartGame = (data: UserData) => {
+    const today = new Date().toISOString().split('T')[0];
+    const playHistory = JSON.parse(localStorage.getItem('playHistory') || '{}');
+    
+    if (playHistory[data.email] === today) {
+      alert("You've already played today! Come back tomorrow for another chance to win.");
+      return;
+    }
+
+    playHistory[data.email] = today;
+    localStorage.setItem('playHistory', JSON.stringify(playHistory));
+
     setUserData(data);
     console.log('Lead Form Submitted:', data);
     setGameState('GAME');
@@ -125,8 +136,8 @@ export default function App() {
       // Prompt says: "If user reaches 10 stack minimum: They qualify for..."
       // Implicitly, if not, they don't. Let's just show the result page but maybe without the rewards unlocked.
       // Or better, let them retry immediately.
-      alert("You need at least 10 items to win! Try again.");
-      setGameState('GAME'); // Restart
+      alert("You need at least 10 items to win! Better luck next time.");
+      setGameState('LANDING'); // Return to start
     }
   };
 
@@ -737,7 +748,7 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
         shake: 0,
     };
     setScore(0);
-    setTimeLeft(15);
+    setTimeLeft(12);
   };
 
   return (
@@ -777,30 +788,16 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
           <div className="bg-white/10 border border-white/20 p-8 rounded-3xl shadow-2xl max-w-2xl w-full">
             <h2 className="text-4xl font-extrabold text-amber-400 mb-8 drop-shadow-lg">How to Play</h2>
             
-            <div className="grid grid-cols-2 gap-8 mb-10">
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-white/10">
-                <div className="text-5xl mb-4">🖱️</div>
-                <h3 className="font-bold text-lg mb-1">Move to Catch</h3>
-                <p className="text-sm text-gray-300">Slide left or right to stack food on your plate.</p>
-              </div>
-              
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-white/10">
-                <div className="text-5xl mb-4">💣</div>
-                <h3 className="font-bold text-lg mb-1">Avoid Bombs</h3>
-                <p className="text-sm text-gray-300">Bombs will destroy your stack!</p>
-              </div>
-              
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-white/10">
-                <div className="text-5xl mb-4">🎟️</div>
-                <h3 className="font-bold text-lg mb-1">Catch Ticket</h3>
-                <p className="text-sm text-gray-300">Grab the Rare Ticket for a Lucky Draw chance.</p>
-              </div>
-              
-              <div className="flex flex-col items-center p-4 bg-white/5 rounded-2xl border border-white/10">
-                <div className="text-5xl mb-4">🏆</div>
-                <h3 className="font-bold text-lg mb-1">Win Condition</h3>
-                <p className="text-sm text-gray-300">Reach 20 stacks before time runs out!</p>
-              </div>
+            <div className="flex flex-col items-center mb-8">
+              <img 
+                src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHZmYXk3bXRvMWhqeDlxMTY2bmtob3VkczhiazBjbTh4ZzM2eThiYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lEGyT2CDpRQAzg09Wb/giphy.gif" 
+                alt="How to Play" 
+                className="rounded-xl shadow-lg mb-6 w-full max-w-md object-cover border border-white/20"
+              />
+              <p className="text-lg md:text-xl font-medium text-white max-w-lg leading-relaxed">
+                Move right and left to stack <span className="text-amber-400 font-bold">20 foods</span> in <span className="text-amber-400 font-bold">12 seconds</span>. 
+                Avoid <span className="text-red-400 font-bold">BOMBS!</span> Catch the <span className="text-emerald-400 font-bold">Rare Lucky Draw Ticket</span>.
+              </p>
             </div>
 
             <button 
