@@ -152,8 +152,10 @@ export default function App() {
       .join(', ');
 
     const gift = gameStats.ticketCount > 0
-      ? `RM500 Voucher + ${gameStats.ticketCount} Lucky Draw Ticket(s)`
-      : 'RM500 Voucher';
+      ? `Up to RM800 OFF + ${gameStats.ticketCount} Ticket Lucky Draw`
+      : 'Up to RM800 OFF';
+
+    const special_note = `Rezeki - ${data.timeline} - ${data.budget} - ${competitors} - ${gift}`;
 
     const payload = {
       company_name:             userData.companyName,
@@ -166,6 +168,7 @@ export default function App() {
       competitors,
       gift,
       total_lucky_draw_ticket:  gameStats.ticketCount,
+      special_note,
     };
 
     // POST via local Express proxy to avoid CORS issues with Google Apps Script
