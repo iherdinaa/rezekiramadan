@@ -20,7 +20,7 @@ const ASSETS = {
   ],
   rareTicket: 'https://files.ajt.my/images/marketing-campaign/image-3e036dd0-805e-4663-8bf2-16f71458cece.png',
   bomb: 'https://static.vecteezy.com/system/resources/thumbnails/009/350/665/small/explosive-bomb-black-png.png',
-  voucher: 'https://files.ajt.my/images/marketing-campaign/image-4e0233e1-092e-4140-b615-6611d9d1a8dd.png',
+  voucher: 'https://files.ajt.my/images/marketing-campaign/image-44741aa6-e6f0-4ac4-a1b2-0d8fe4e38d62.png',
   ticketDisplay: 'https://files.ajt.my/images/marketing-campaign/image-5d30bd35-ceee-41fe-9553-1c580ad2a425.png',
   music: 'https://cdn.pixabay.com/audio/2022/07/04/audio_09aef7c53d.mp3',
 };
@@ -39,6 +39,41 @@ interface QualificationData {
   budget: string;
   portals: string[];
   otherPortal: string;
+}
+
+// Sends payload to Google Sheet. Uses the Vite dev-server middleware (/api/submit)
+// when available; falls back to calling the Apps Script webhook directly with
+// mode:'no-cors' + Content-Type:text/plain (a CORS "simple request" — no preflight,
+// body is received by Apps Script via e.postData.contents).
+async function postToSheet(payload: Record<string, unknown>): Promise<void> {
+  const webhookUrl = import.meta.env.VITE_SHEET_WEBHOOK_URL as string | undefined;
+
+  // Try the Vite middleware proxy first (dev environment)
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) return;
+  } catch {
+    // Middleware not available — fall through to direct call
+  }
+
+  // Direct call to Apps Script (production / when proxy is unavailable)
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        // text/plain avoids CORS preflight; Apps Script reads body via e.postData.contents
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.error('[v0] Failed to post to sheet:', err);
+    }
+  }
 }
 
 // Read UTM params from URL once at module level (stable across renders)
@@ -74,16 +109,12 @@ export default function App() {
       clickCountsRef.current = next;
       return next;
     });
-    fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_type:   type,
-        email:        userData.email,
-        company_name: userData.companyName,
-        ...utmParams,
-      }),
-    }).catch(() => {});
+    postToSheet({
+      event_type:   type,
+      email:        userData.email,
+      company_name: userData.companyName,
+      ...utmParams,
+    });
   };
 
   // Initialize Background Music
@@ -209,18 +240,7 @@ export default function App() {
       ...utmParams,
     };
 
-    // POST via local Express proxy to avoid CORS issues with Google Apps Script
-    try {
-      const res = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      const result = await res.json();
-      console.log('[v0] Sheet submission result:', result);
-    } catch (err) {
-      console.error('[v0] Failed to submit to sheet:', err);
-    }
+    await postToSheet(payload);
 
     setGameState('RESULT');
   };
@@ -364,7 +384,7 @@ const FrontPage: React.FC<{ onStart: (data: UserData) => void }> = ({ onStart })
                    <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden shadow-lg border border-white/10">
                      <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-cover scale-110" />
                    </div>
-                   <p className="text-base font-bold text-white leading-tight">RM500 Voucher</p>
+                   <p className="text-base font-bold text-white leading-tight">Up to RM800 OFF</p>
                    <p className="text-sm text-emerald-200">For Hiring Packages</p>
                 </div>
                 <div className="flex-1 transform hover:-translate-y-1 transition-transform duration-300 delay-75">
@@ -1184,7 +1204,7 @@ const ResultView: React.FC<{
           <div className="h-40 flex items-center justify-center overflow-hidden rounded-lg shadow-sm bg-white">
              <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-contain" />
           </div>
-          <p className="text-xs text-emerald-600 mt-2 font-semibold">Up to RM500 AJobThing Voucher</p>
+          <p className="text-xs text-emerald-600 mt-2 font-semibold">Up to RM800 OFF AJobThing Voucher</p>
         </div>
 
         <div className={`p-4 rounded-xl border ${stats.ticketCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-gray-100 border-gray-200 opacity-70'}`}>
