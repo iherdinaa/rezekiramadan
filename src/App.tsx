@@ -168,24 +168,17 @@ export default function App() {
       total_lucky_draw_ticket:  gameStats.ticketCount,
     };
 
-    // POST to Google Apps Script Web App webhook
-    // Replace the URL below with your deployed Apps Script Web App URL
-    const SHEET_WEBHOOK_URL = import.meta.env.VITE_SHEET_WEBHOOK_URL || '';
-
-    if (SHEET_WEBHOOK_URL) {
-      try {
-        await fetch(SHEET_WEBHOOK_URL, {
-          method: 'POST',
-          // Apps Script requires text/plain to avoid CORS preflight on no-cors mode
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(payload),
-        });
-      } catch (err) {
-        console.error('Failed to send data to sheet:', err);
-      }
-    } else {
-      console.warn('VITE_SHEET_WEBHOOK_URL is not set. Skipping sheet submission.');
+    // POST via local Express proxy to avoid CORS issues with Google Apps Script
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+      console.log('[v0] Sheet submission result:', result);
+    } catch (err) {
+      console.error('[v0] Failed to submit to sheet:', err);
     }
 
     setGameState('RESULT');
