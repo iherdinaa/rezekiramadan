@@ -38,7 +38,7 @@ interface QualificationData {
   timeline: string;
   budget: string;
   portals: string[];
-  otherPortal?: string;
+  otherPortal: string;
 }
 
 export default function App() {
@@ -145,8 +145,45 @@ export default function App() {
     setGameState('QUALIFICATION');
   };
 
-  const handleQualificationSubmit = (data: QualificationData) => {
-    console.log('Qualification Data:', data);
+  const handleQualificationSubmit = async (data: QualificationData) => {
+    // Build the full payload matching the sheet columns
+    const competitors = data.portals
+      .map(p => p === 'Others' && data.otherPortal ? data.otherPortal : p)
+      .join(', ');
+
+    const gift = gameStats.ticketCount > 0
+      ? `Up to RM800 OFF + ${gameStats.ticketCount} Ticket Lucky Draw`
+      : 'Up to RM800 OFF';
+
+    const special_note = `Rezeki - ${data.timeline} - ${data.budget} - ${competitors} - ${gift}`;
+
+    const payload = {
+      company_name:             userData.companyName,
+      email:                    userData.email,
+      phone_number:             `+60${userData.phone}`,
+      ajobthing_account:        userData.hasAccount ? 'Yes' : 'No',
+      score:                    gameStats.score,
+      hiring_timeline:          data.timeline,
+      hiring_budget:            data.budget,
+      competitors,
+      gift,
+      total_lucky_draw_ticket:  gameStats.ticketCount,
+      special_note,
+    };
+
+    // POST via local Express proxy to avoid CORS issues with Google Apps Script
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+      console.log('[v0] Sheet submission result:', result);
+    } catch (err) {
+      console.error('[v0] Failed to submit to sheet:', err);
+    }
+
     setGameState('RESULT');
   };
 
@@ -863,7 +900,7 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : undefined });
+    onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : '' });
   };
 
   const togglePortal = (portal: string) => {
