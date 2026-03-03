@@ -38,7 +38,7 @@ interface QualificationData {
   timeline: string;
   budget: string;
   portals: string[];
-  otherPortal?: string;
+  otherPortal: string;
 }
 
 export default function App() {
@@ -145,8 +145,49 @@ export default function App() {
     setGameState('QUALIFICATION');
   };
 
-  const handleQualificationSubmit = (data: QualificationData) => {
-    console.log('Qualification Data:', data);
+  const handleQualificationSubmit = async (data: QualificationData) => {
+    // Build the full payload matching the sheet columns
+    const competitors = data.portals
+      .map(p => p === 'Others' && data.otherPortal ? data.otherPortal : p)
+      .join(', ');
+
+    const gift = gameStats.ticketCount > 0
+      ? `RM500 Voucher + ${gameStats.ticketCount} Lucky Draw Ticket(s)`
+      : 'RM500 Voucher';
+
+    const payload = {
+      company_name:             userData.companyName,
+      email:                    userData.email,
+      phone_number:             `+60${userData.phone}`,
+      ajobthing_account:        userData.hasAccount ? 'Yes' : 'No',
+      score:                    gameStats.score,
+      hiring_timeline:          data.timeline,
+      hiring_budget:            data.budget,
+      competitors,
+      gift,
+      total_lucky_draw_ticket:  gameStats.ticketCount,
+    };
+
+    // POST to Google Apps Script Web App webhook
+    // Replace the URL below with your deployed Apps Script Web App URL
+    const SHEET_WEBHOOK_URL = import.meta.env.VITE_SHEET_WEBHOOK_URL || '';
+
+    if (SHEET_WEBHOOK_URL) {
+      try {
+        await fetch(SHEET_WEBHOOK_URL, {
+          method: 'POST',
+          // Apps Script requires text/plain to avoid CORS preflight on no-cors mode
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {
+        console.error('Failed to send data to sheet:', err);
+      }
+    } else {
+      console.warn('VITE_SHEET_WEBHOOK_URL is not set. Skipping sheet submission.');
+    }
+
     setGameState('RESULT');
   };
 
@@ -863,7 +904,7 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : undefined });
+    onSubmit({ ...data, otherPortal: data.portals.includes('Others') ? otherPortal : '' });
   };
 
   const togglePortal = (portal: string) => {
