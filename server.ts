@@ -17,8 +17,6 @@ app.post('/api/submit', async (req, res) => {
   }
 
   try {
-    console.log('[v0] Forwarding submission to Google Sheet:', req.body);
-
     const response = await fetch(SHEET_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
