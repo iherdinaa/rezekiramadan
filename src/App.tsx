@@ -6,7 +6,7 @@ import { Loader2, Share2, Volume2, VolumeX } from 'lucide-react';
 
 const ASSETS = {
   logo: 'https://s3-ap-southeast-1.amazonaws.com/ricebowl/images/marketing-campaign/image-9520d447-0168-412d-9cd5-d083a3ab8884.png',
-  background: 'https://files.ajt.my/images/marketing-campaign/image-743f9404-403e-443a-acd8-3f26097aa45f.jpg',
+  background: 'https://s3-ap-southeast-1.amazonaws.com/ricebowl/images/marketing-campaign/image-cfa12d65-57ee-474c-973f-9b8f089097bd.jpg',
   title: 'https://files.ajt.my/images/marketing-campaign/image-395fb9e5-8616-491a-99f4-14daa3e36ea9.png',
   subheadline: 'https://files.ajt.my/images/marketing-campaign/image-88fccc49-e0b3-4497-90e3-56bfde40a1d5.png',
   date: 'https://files.ajt.my/images/marketing-campaign/image-37000be9-f927-425c-a3d5-620d96095d75.png',
