@@ -6,7 +6,7 @@ import { Loader2, Share2, Volume2, VolumeX } from 'lucide-react';
 
 const ASSETS = {
   logo: 'https://s3-ap-southeast-1.amazonaws.com/ricebowl/images/marketing-campaign/image-9520d447-0168-412d-9cd5-d083a3ab8884.png',
-  background: 'https://s3-ap-southeast-1.amazonaws.com/ricebowl/images/marketing-campaign/image-cfa12d65-57ee-474c-973f-9b8f089097bd.jpg',
+  background: 'https://s3-ap-southeast-1.amazonaws.com/ricebowl/images/marketing-campaign/image-4321bb0b-fc80-4e35-83f0-a02919bda847.png',
   title: 'https://files.ajt.my/images/marketing-campaign/image-395fb9e5-8616-491a-99f4-14daa3e36ea9.png',
   subheadline: 'https://files.ajt.my/images/marketing-campaign/image-88fccc49-e0b3-4497-90e3-56bfde40a1d5.png',
   date: 'https://files.ajt.my/images/marketing-campaign/image-37000be9-f927-425c-a3d5-620d96095d75.png',
@@ -80,8 +80,8 @@ async function postToSheet(payload: Record<string, unknown>): Promise<void> {
 function getUtmParams() {
   const params = new URLSearchParams(window.location.search);
   return {
-    utm_source:   params.get('utm_source')   || 'direct',
-    utm_medium:   params.get('utm_medium')   || 'direct',
+    utm_source: params.get('utm_source') || 'direct',
+    utm_medium: params.get('utm_medium') || 'direct',
     utm_campaign: params.get('utm_campaign') || 'direct',
   };
 }
@@ -110,8 +110,8 @@ export default function App() {
       return next;
     });
     postToSheet({
-      event_type:   type,
-      email:        userData.email,
+      event_type: type,
+      email: userData.email,
       company_name: userData.companyName,
       ...utmParams,
     });
@@ -122,7 +122,7 @@ export default function App() {
     bgMusicRef.current = new Audio(ASSETS.music);
     bgMusicRef.current.loop = true;
     bgMusicRef.current.volume = 0.5;
-    
+
     return () => {
       if (bgMusicRef.current) {
         bgMusicRef.current.pause();
@@ -148,7 +148,7 @@ export default function App() {
       ASSETS.logo, ASSETS.background, ASSETS.title, ASSETS.subheadline, ASSETS.date,
       ASSETS.plate, ...ASSETS.foods, ASSETS.rareTicket, ASSETS.bomb, ASSETS.voucher, ASSETS.ticketDisplay
     ];
-    
+
     let loadedCount = 0;
     const total = imageUrls.length;
 
@@ -177,7 +177,7 @@ export default function App() {
   const handleStartGame = (data: UserData) => {
     const today = new Date().toISOString().split('T')[0];
     const playHistory = JSON.parse(localStorage.getItem('playHistory') || '{}');
-    
+
     if (playHistory[data.email] === today) {
       alert("You've already played today! Come back tomorrow for another chance to win.");
       return;
@@ -226,16 +226,16 @@ export default function App() {
     const special_note = `Rezeki - ${data.timeline} - ${data.budget} - ${competitors} - ${gift}`;
 
     const payload = {
-      company_name:             userData.companyName,
-      email:                    userData.email,
-      phone_number:             `+60${userData.phone}`,
-      ajobthing_account:        userData.hasAccount ? 'Yes' : 'No',
-      score:                    gameStats.score,
-      hiring_timeline:          data.timeline,
-      hiring_budget:            data.budget,
+      company_name: userData.companyName,
+      email: userData.email,
+      phone_number: `+60${userData.phone}`,
+      ajobthing_account: userData.hasAccount ? 'Yes' : 'No',
+      score: gameStats.score,
+      hiring_timeline: data.timeline,
+      hiring_budget: data.budget,
       competitors,
       gift,
-      total_lucky_draw_ticket:  gameStats.ticketCount,
+      total_lucky_draw_ticket: gameStats.ticketCount,
       special_note,
       ...utmParams,
     };
@@ -248,21 +248,21 @@ export default function App() {
   return (
     <div className="relative w-full h-screen overflow-hidden font-sans text-slate-800 bg-black">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${ASSETS.background})` }}
       />
-      
+
       {/* Overlay Pattern (Subtle Darkening for readability) */}
       <div className="absolute inset-0 z-0 bg-black/20" />
 
       {/* Main Content Container */}
       <div className="relative z-10 w-full h-full max-w-7xl mx-auto flex flex-col">
-        
+
         {/* Header / Logo */}
         <header className="absolute top-0 left-0 w-full px-6 pb-6 pt-10 flex justify-between items-center z-50">
           <img src={ASSETS.logo} alt="Ricebowl Logo" className="h-10 md:h-14 object-contain drop-shadow-md" />
-          <button  
+          <button
             onClick={() => setAudioEnabled(!audioEnabled)}
             className="p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors backdrop-blur-sm border border-white/20"
           >
@@ -274,7 +274,7 @@ export default function App() {
         <main className="flex-1 flex flex-col items-center justify-center p-4 w-full h-full">
           <AnimatePresence mode="wait">
             {gameState === 'LOADING' && (
-              <motion.div 
+              <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -324,82 +324,82 @@ const FrontPage: React.FC<{ onStart: (data: UserData) => void }> = ({ onStart })
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 1.05 }}
       className="w-full h-full flex items-center justify-center p-4 pt-20 pb-4 overflow-y-auto"
     >
       <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-8 items-center my-auto">
-        
+
         {/* Left Side: Campaign Visuals */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
-          <motion.img 
+          <motion.img
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             whileHover={{ scale: 1.02 }}
             transition={{ delay: 0.2 }}
-            src={ASSETS.title} 
-            alt="Rezeki Stack Raya" 
-            className="w-80 md:w-[28rem] drop-shadow-2xl cursor-pointer" 
+            src={ASSETS.title}
+            alt="Rezeki Stack Raya"
+            className="w-80 md:w-[28rem] drop-shadow-2xl cursor-pointer"
           />
-          
-          <motion.img 
+
+          <motion.img
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             whileHover={{ scale: 1.02 }}
             transition={{ delay: 0.4 }}
-            src={ASSETS.subheadline} 
-            alt="Stack the Halal Feast" 
-            className="w-96 md:w-[28rem] drop-shadow-lg mx-auto lg:mx-0 cursor-pointer" 
+            src={ASSETS.subheadline}
+            alt="Stack the Halal Feast"
+            className="w-96 md:w-[28rem] drop-shadow-lg mx-auto lg:mx-0 cursor-pointer"
           />
-          
-          <motion.img 
+
+          <motion.img
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             whileHover={{ scale: 1.1 }}
             transition={{ delay: 0.6 }}
-            src={ASSETS.date} 
-            alt="Campaign Duration" 
-            className="h-8 md:h-10 object-contain drop-shadow-md mx-auto lg:mx-0" 
+            src={ASSETS.date}
+            alt="Campaign Duration"
+            className="h-8 md:h-10 object-contain drop-shadow-md mx-auto lg:mx-0"
           />
-          
+
           {/* Rewards Showcase - Compact */}
-          <motion.div 
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             whileHover={{ scale: 1.02 }}
             transition={{ delay: 0.8 }}
             className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl border border-white/30 shadow-2xl w-full max-w-xl mt-2 mb-4 relative overflow-hidden group cursor-pointer"
           >
-             <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-             
-             <h3 className="text-amber-300 font-extrabold mb-4 uppercase tracking-widest text-sm flex items-center gap-2">
-               <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-               Win These Exclusive Rewards
-             </h3>
-             
-             <div className="flex gap-6 justify-center lg:justify-start">
-                <div className="flex-1 transform hover:-translate-y-1 transition-transform duration-300">
-                   <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden shadow-lg border border-white/10">
-                     <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-cover scale-110" />
-                   </div>
-                   <p className="text-base font-bold text-white leading-tight">Up to RM800 OFF</p>
-                   <p className="text-sm text-emerald-200">For Hiring Packages</p>
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <h3 className="text-amber-300 font-extrabold mb-4 uppercase tracking-widest text-sm flex items-center gap-2">
+              <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+              Win These Exclusive Rewards
+            </h3>
+
+            <div className="flex gap-6 justify-center lg:justify-start">
+              <div className="flex-1 transform hover:-translate-y-1 transition-transform duration-300">
+                <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden shadow-lg border border-white/10">
+                  <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-cover scale-110" />
                 </div>
-                <div className="flex-1 transform hover:-translate-y-1 transition-transform duration-300 delay-75">
-                   <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden shadow-lg border border-white/10">
-                     <img src={ASSETS.ticketDisplay} alt="Lucky Draw" className="w-full h-full object-cover scale-110" />
-                   </div>
-                   <p className="text-base font-bold text-white leading-tight">Lucky Draw Ticket</p>
-                   <p className="text-sm text-emerald-200">5-Star Hotel Buffet</p>
+                <p className="text-base font-bold text-white leading-tight">Up to RM800 OFF</p>
+                <p className="text-sm text-emerald-200">For Hiring Packages</p>
+              </div>
+              <div className="flex-1 transform hover:-translate-y-1 transition-transform duration-300 delay-75">
+                <div className="relative aspect-[4/3] mb-3 rounded-lg overflow-hidden shadow-lg border border-white/10">
+                  <img src={ASSETS.ticketDisplay} alt="Lucky Draw" className="w-full h-full object-cover scale-110" />
                 </div>
-             </div>
+                <p className="text-base font-bold text-white leading-tight">Lucky Draw Ticket</p>
+                <p className="text-sm text-emerald-200">5-Star Hotel Buffet</p>
+              </div>
+            </div>
           </motion.div>
         </div>
 
         {/* Right Side: Compact Form */}
-        <motion.div 
+        <motion.div
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
@@ -412,85 +412,85 @@ const FrontPage: React.FC<{ onStart: (data: UserData) => void }> = ({ onStart })
             </h2>
             <p className="text-emerald-100 text-sm font-medium relative z-10">Enter your details to start stacking!</p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             <div className="space-y-1">
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Company Name</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 required
                 placeholder="e.g. AJobThing Sdn Bhd"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-semibold text-sm text-gray-800 placeholder:text-gray-400"
                 value={formData.companyName}
-                onChange={e => setFormData({...formData, companyName: e.target.value})}
+                onChange={e => setFormData({ ...formData, companyName: e.target.value })}
               />
             </div>
-            
+
             <div className="space-y-1">
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Email Address</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 required
                 placeholder="name@company.com"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-semibold text-sm text-gray-800 placeholder:text-gray-400"
                 value={formData.email}
-                onChange={e => setFormData({...formData, email: e.target.value})}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
-            
+
             <div className="space-y-1">
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Phone Number</label>
               <div className="flex shadow-sm rounded-lg overflow-hidden">
-                 <span className="inline-flex items-center px-4 bg-gray-100 border border-r-0 border-gray-200 text-gray-600 font-bold text-sm select-none">
-                   🇲🇾 +60
-                 </span>
-                 <input 
-                  type="tel" 
+                <span className="inline-flex items-center px-4 bg-gray-100 border border-r-0 border-gray-200 text-gray-600 font-bold text-sm select-none">
+                  🇲🇾 +60
+                </span>
+                <input
+                  type="tel"
                   required
                   pattern="[0-9]*"
                   placeholder="123456789"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all font-semibold text-sm text-gray-800 placeholder:text-gray-400"
                   value={formData.phone}
                   onChange={e => {
-                      const val = e.target.value.replace(/\D/g, '');
-                      setFormData({...formData, phone: val});
+                    const val = e.target.value.replace(/\D/g, '');
+                    setFormData({ ...formData, phone: val });
                   }}
                 />
               </div>
             </div>
 
             <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-               <label className="block text-xs font-bold text-emerald-900 mb-2">Do you have an AJobThing account?</label>
-               <div className="flex gap-4">
-                  <label className="flex-1 relative cursor-pointer group">
-                     <input 
-                        type="radio" 
-                        name="hasAccount" 
-                        className="peer sr-only"
-                        checked={formData.hasAccount === true}
-                        onChange={() => setFormData({...formData, hasAccount: true})}
-                     />
-                     <div className="flex items-center justify-center py-2 px-4 rounded-md border-2 border-emerald-200 bg-white text-emerald-700 font-bold text-sm transition-all peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white group-hover:border-emerald-400 shadow-sm">
-                        Yes
-                     </div>
-                  </label>
-                  <label className="flex-1 relative cursor-pointer group">
-                     <input 
-                        type="radio" 
-                        name="hasAccount" 
-                        className="peer sr-only"
-                        checked={formData.hasAccount === false}
-                        onChange={() => setFormData({...formData, hasAccount: false})}
-                     />
-                     <div className="flex items-center justify-center py-2 px-4 rounded-md border-2 border-emerald-200 bg-white text-emerald-700 font-bold text-sm transition-all peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white group-hover:border-emerald-400 shadow-sm">
-                        No
-                     </div>
-                  </label>
-               </div>
+              <label className="block text-xs font-bold text-emerald-900 mb-2">Do you have an AJobThing account?</label>
+              <div className="flex gap-4">
+                <label className="flex-1 relative cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="hasAccount"
+                    className="peer sr-only"
+                    checked={formData.hasAccount === true}
+                    onChange={() => setFormData({ ...formData, hasAccount: true })}
+                  />
+                  <div className="flex items-center justify-center py-2 px-4 rounded-md border-2 border-emerald-200 bg-white text-emerald-700 font-bold text-sm transition-all peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white group-hover:border-emerald-400 shadow-sm">
+                    Yes
+                  </div>
+                </label>
+                <label className="flex-1 relative cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="hasAccount"
+                    className="peer sr-only"
+                    checked={formData.hasAccount === false}
+                    onChange={() => setFormData({ ...formData, hasAccount: false })}
+                  />
+                  <div className="flex items-center justify-center py-2 px-4 rounded-md border-2 border-emerald-200 bg-white text-emerald-700 font-bold text-sm transition-all peer-checked:border-emerald-600 peer-checked:bg-emerald-600 peer-checked:text-white group-hover:border-emerald-400 shadow-sm">
+                    No
+                  </div>
+                </label>
+              </div>
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               className="w-full px-6 py-4 bg-gradient-to-r from-amber-400 to-amber-500 text-emerald-950 font-extrabold text-xl rounded-xl hover:from-amber-500 hover:to-amber-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
             >
               Play Now <span className="text-2xl">🎮</span>
@@ -535,13 +535,13 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
     try {
       const ctx = audioCtxRef.current;
       if (ctx.state === 'suspended') ctx.resume();
-      
+
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      
+
       osc.connect(gain);
       gain.connect(ctx.destination);
-      
+
       if (type === 'pop') {
         osc.frequency.setValueAtTime(400, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.1);
@@ -621,7 +621,7 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
     const handleMove = (clientX: number) => {
       const rect = canvas.getBoundingClientRect();
       const x = clientX - rect.left;
-      gameStateRef.current.playerX = Math.max(PLAYER_WIDTH/2, Math.min(canvas.width - PLAYER_WIDTH/2, x));
+      gameStateRef.current.playerX = Math.max(PLAYER_WIDTH / 2, Math.min(canvas.width - PLAYER_WIDTH / 2, x));
     };
 
     const onMouseMove = (e: MouseEvent) => handleMove(e.clientX);
@@ -652,7 +652,7 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
         const rand = Math.random();
         let type = 'food';
         let imageKey = `food${Math.floor(Math.random() * assets.foods.length)}`;
-        
+
         if (rand < 0.08 && state.ticketCount < 2) { // Allow max 2 tickets
           type = 'ticket';
           imageKey = 'rareTicket';
@@ -679,34 +679,34 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
 
         // Draw Item
         const img = imagesRef.current[item.imageKey];
-        
+
         // Glowing effect for ticket
         if (item.type === 'ticket') {
-            ctx.save();
-            ctx.shadowColor = '#fbbf24'; // Amber glow
-            ctx.shadowBlur = 20 + Math.sin(state.frameCount * 0.1) * 10;
-            if (img) {
-                ctx.drawImage(img, item.x, item.y, item.width, item.height);
-            } else {
-                ctx.fillStyle = 'gold';
-                ctx.fillRect(item.x, item.y, item.width, item.height);
-            }
-            ctx.restore();
+          ctx.save();
+          ctx.shadowColor = '#fbbf24'; // Amber glow
+          ctx.shadowBlur = 20 + Math.sin(state.frameCount * 0.1) * 10;
+          if (img) {
+            ctx.drawImage(img, item.x, item.y, item.width, item.height);
+          } else {
+            ctx.fillStyle = 'gold';
+            ctx.fillRect(item.x, item.y, item.width, item.height);
+          }
+          ctx.restore();
         } else {
-            if (img) {
-              ctx.drawImage(img, item.x, item.y, item.width, item.height);
-            } else {
-                // Fallback
-                ctx.fillStyle = item.type === 'bomb' ? 'red' : 'green';
-                ctx.fillRect(item.x, item.y, item.width, item.height);
-            }
+          if (img) {
+            ctx.drawImage(img, item.x, item.y, item.width, item.height);
+          } else {
+            // Fallback
+            ctx.fillStyle = item.type === 'bomb' ? 'red' : 'green';
+            ctx.fillRect(item.x, item.y, item.width, item.height);
+          }
         }
 
         // Collision Detection
         // Simple AABB collision with player plate area
         // Player hitbox is at the bottom
         const playerY = canvas.height - 120; // Plate position from bottom (adjusted for bigger plate)
-        
+
         // Check if item hits the "stack" or plate
         // For simplicity, we just check if it hits the player's horizontal range at the correct height
         if (
@@ -730,7 +730,7 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
             state.stackHeight += 1;
             playSound('pop');
           }
-          
+
           setScore(state.score); // Sync React state
           state.items.splice(i, 1); // Remove item
           continue;
@@ -756,11 +756,11 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
       const playerY = canvas.height - 120;
       if (plateImg) {
         ctx.drawImage(
-            plateImg, 
-            state.playerX - PLAYER_WIDTH / 2, 
-            playerY, 
-            PLAYER_WIDTH, 
-            PLAYER_WIDTH * (plateImg.height / plateImg.width)
+          plateImg,
+          state.playerX - PLAYER_WIDTH / 2,
+          playerY,
+          PLAYER_WIDTH,
+          PLAYER_WIDTH * (plateImg.height / plateImg.width)
         );
       }
 
@@ -769,23 +769,23 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
       const stackYStart = playerY;
       const stackLimit = 20; // Max items to show visually
       const visualStack = Math.min(state.stackHeight, stackLimit);
-      
+
       for (let j = 0; j < visualStack; j++) {
-          // Just draw generic food icons for the stack to save performance/complexity
-          // Or use the last caught item? Let's just use a random food icon for visual flair
-          // For stability, we'll just cycle through food images based on index
-          const foodIdx = j % assets.foods.length;
-          const stackImg = imagesRef.current[`food${foodIdx}`];
-          if (stackImg) {
-              const yPos = stackYStart - (j * 25) - 30; // Stack upwards (adjusted for bigger items)
-              // Add some wobble
-              const wobble = Math.sin(state.frameCount * 0.1 + j) * 5;
-              ctx.drawImage(stackImg, state.playerX - 40 + wobble, yPos, 80, 80); // Bigger stack items
-          }
+        // Just draw generic food icons for the stack to save performance/complexity
+        // Or use the last caught item? Let's just use a random food icon for visual flair
+        // For stability, we'll just cycle through food images based on index
+        const foodIdx = j % assets.foods.length;
+        const stackImg = imagesRef.current[`food${foodIdx}`];
+        if (stackImg) {
+          const yPos = stackYStart - (j * 25) - 30; // Stack upwards (adjusted for bigger items)
+          // Add some wobble
+          const wobble = Math.sin(state.frameCount * 0.1 + j) * 5;
+          ctx.drawImage(stackImg, state.playerX - 40 + wobble, yPos, 80, 80); // Bigger stack items
+        }
       }
 
       if (state.shake > 0) { // Restore context after shake
-          ctx.restore();
+        ctx.restore();
       }
 
       animationFrameId = requestAnimationFrame(loop);
@@ -832,15 +832,15 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
     setShowTutorial(false);
     setGameStarted(true);
     gameStateRef.current = {
-        score: 0,
-        items: [],
-        playerX: canvasRef.current ? canvasRef.current.width / 2 : 0,
-        gameActive: true,
-        frameCount: 0,
-        ticketCount: 0,
-        stackHeight: 0,
-        speedMultiplier: 1.2,
-        shake: 0,
+      score: 0,
+      items: [],
+      playerX: canvasRef.current ? canvasRef.current.width / 2 : 0,
+      gameActive: true,
+      frameCount: 0,
+      ticketCount: 0,
+      stackHeight: 0,
+      speedMultiplier: 1.2,
+      shake: 0,
     };
     setScore(0);
     setTimeLeft(12);
@@ -854,15 +854,15 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
           <p className="text-xs font-bold uppercase tracking-wider">Stack</p>
           <p className="text-2xl font-black">{score}</p>
         </div>
-        
+
         <div className="flex flex-col items-center">
-             <div className="w-48 h-4 bg-gray-200 rounded-full overflow-hidden border border-white/50 shadow-inner">
-                <div 
-                    className="h-full bg-gradient-to-r from-green-400 to-emerald-600 transition-all duration-300"
-                    style={{ width: `${Math.min(100, (score / 20) * 100)}%` }}
-                />
-             </div>
-             <p className="text-white text-xs mt-1 font-bold drop-shadow-md">Target: 20 Stacks</p>
+          <div className="w-48 h-4 bg-gray-200 rounded-full overflow-hidden border border-white/50 shadow-inner">
+            <div
+              className="h-full bg-gradient-to-r from-green-400 to-emerald-600 transition-all duration-300"
+              style={{ width: `${Math.min(100, (score / 20) * 100)}%` }}
+            />
+          </div>
+          <p className="text-white text-xs mt-1 font-bold drop-shadow-md">Target: 20 Stacks</p>
         </div>
 
         <div className={`bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg border ${timeLeft < 5 ? 'border-red-500 text-red-600 animate-pulse' : 'border-emerald-200 text-emerald-900'}`}>
@@ -872,8 +872,8 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
       </div>
 
       {/* Canvas */}
-      <canvas 
-        ref={canvasRef} 
+      <canvas
+        ref={canvasRef}
         className="w-full h-full touch-none cursor-none"
       />
 
@@ -882,20 +882,20 @@ const GameView: React.FC<{ assets: typeof ASSETS, onGameOver: (stats: any) => vo
         <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center text-white z-20 p-6 text-center">
           <div className="bg-white/10 border border-white/20 p-8 rounded-3xl shadow-2xl max-w-2xl w-full">
             <h2 className="text-4xl font-extrabold text-amber-400 mb-8 drop-shadow-lg">How to Play</h2>
-            
+
             <div className="flex flex-col items-center mb-8">
-              <img 
-                src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHZmYXk3bXRvMWhqeDlxMTY2bmtob3VkczhiazBjbTh4ZzM2eThiYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lEGyT2CDpRQAzg09Wb/giphy.gif" 
-                alt="How to Play" 
+              <img
+                src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHZmYXk3bXRvMWhqeDlxMTY2bmtob3VkczhiazBjbTh4ZzM2eThiYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lEGyT2CDpRQAzg09Wb/giphy.gif"
+                alt="How to Play"
                 className="rounded-xl shadow-lg mb-6 w-full max-w-md object-cover border border-white/20"
               />
               <p className="text-lg md:text-xl font-medium text-white max-w-lg leading-relaxed">
-                Move right and left to stack <span className="text-amber-400 font-bold">20 foods</span> in <span className="text-amber-400 font-bold">12 seconds</span>. 
+                Move right and left to stack <span className="text-amber-400 font-bold">20 foods</span> in <span className="text-amber-400 font-bold">12 seconds</span>.
                 Avoid <span className="text-red-400 font-bold">BOMBS!</span> Catch the <span className="text-emerald-400 font-bold">Rare Lucky Draw Ticket</span>.
               </p>
             </div>
 
-            <button 
+            <button
               onClick={startGame}
               className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-black text-2xl px-10 py-5 rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 border-b-4 border-emerald-800"
             >
@@ -917,7 +917,7 @@ const EnvelopeReveal: React.FC<{ stats: { score: number, stackCount: number, tic
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
@@ -937,14 +937,14 @@ const EnvelopeReveal: React.FC<{ stats: { score: number, stackCount: number, tic
               <div className="text-amber-800 font-bold text-xl z-10">Tap to Open Reward</div>
             </motion.div>
           ) : (
-             <motion.div
-                initial={{ y: 50, opacity: 0, scale: 0.5 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                className="text-center text-white"
-             >
-                <h2 className="text-4xl font-bold text-amber-400 mb-4">Score: {stats.score}</h2>
-                <p className="text-xl">Opening your rewards...</p>
-             </motion.div>
+            <motion.div
+              initial={{ y: 50, opacity: 0, scale: 0.5 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              className="text-center text-white"
+            >
+              <h2 className="text-4xl font-bold text-amber-400 mb-4">Score: {stats.score}</h2>
+              <p className="text-xl">Opening your rewards...</p>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
@@ -973,7 +973,7 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="w-full max-w-6xl mx-auto p-4 flex items-center justify-center h-full"
@@ -981,110 +981,110 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-amber-400 w-full flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="bg-emerald-700 p-6 text-center shrink-0 relative overflow-hidden">
-           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-           <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-wider drop-shadow-md relative z-10">
-             Unlock Your Rezeki!
-           </h2>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+          <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-wider drop-shadow-md relative z-10">
+            Unlock Your Rezeki!
+          </h2>
         </div>
 
         {/* Subheader */}
         <div className="bg-white p-4 text-center border-b border-gray-100 shrink-0">
-           <p className="text-emerald-800 font-bold italic text-lg">
-             "Just 3 quick questions to reveal your prosperity!"
-           </p>
+          <p className="text-emerald-800 font-bold italic text-lg">
+            "Just 3 quick questions to reveal your prosperity!"
+          </p>
         </div>
 
         {/* Form Content - Scrollable if needed */}
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 md:p-8 bg-amber-50/30">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-            
+
             {/* Column 1 */}
             <div className="flex flex-col h-full">
-               <div className="flex items-start gap-3 mb-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">1</div>
-                  <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
-                    What is your next hiring timeline?
-                  </h3>
-               </div>
-               <div className="space-y-3 flex-1">
-                  {['Currently hiring', 'Hiring after Raya', 'Hiring in 3 months', 'Not yet planned'].map(opt => (
-                    <label key={opt} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.timeline === opt ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
-                      <input 
-                        type="radio" 
-                        name="timeline" 
-                        value={opt} 
-                        required 
-                        checked={data.timeline === opt}
-                        onChange={e => setData({...data, timeline: e.target.value})}
-                        className="sr-only"
-                      />
-                      <span className={`text-sm font-bold ${data.timeline === opt ? 'text-emerald-800' : 'text-gray-600'}`}>{opt}</span>
-                    </label>
-                  ))}
-               </div>
+              <div className="flex items-start gap-3 mb-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">1</div>
+                <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
+                  What is your next hiring timeline?
+                </h3>
+              </div>
+              <div className="space-y-3 flex-1">
+                {['Currently hiring', 'Hiring after Raya', 'Hiring in 3 months', 'Not yet planned'].map(opt => (
+                  <label key={opt} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.timeline === opt ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
+                    <input
+                      type="radio"
+                      name="timeline"
+                      value={opt}
+                      required
+                      checked={data.timeline === opt}
+                      onChange={e => setData({ ...data, timeline: e.target.value })}
+                      className="sr-only"
+                    />
+                    <span className={`text-sm font-bold ${data.timeline === opt ? 'text-emerald-800' : 'text-gray-600'}`}>{opt}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* Column 2 */}
             <div className="flex flex-col h-full">
-               <div className="flex items-start gap-3 mb-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">2</div>
-                  <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
-                    Do you already have a recruitment budget allocated?
-                  </h3>
-               </div>
-               <div className="space-y-3 flex-1">
-                  {[
-                    'Yes, budget approved and not yet spent',
-                    'Yes, budget approved and spent some',
-                    'Budget pending approval',
-                    'Not yet allocated/No budget'
-                  ].map(opt => (
-                    <label key={opt} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.budget === opt ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
-                      <input 
-                        type="radio" 
-                        name="budget" 
-                        value={opt} 
-                        required 
-                        checked={data.budget === opt}
-                        onChange={e => setData({...data, budget: e.target.value})}
-                        className="sr-only"
-                      />
-                      <span className={`text-sm font-bold ${data.budget === opt ? 'text-emerald-800' : 'text-gray-600'}`}>{opt}</span>
-                    </label>
-                  ))}
-               </div>
+              <div className="flex items-start gap-3 mb-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">2</div>
+                <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
+                  Do you already have a recruitment budget allocated?
+                </h3>
+              </div>
+              <div className="space-y-3 flex-1">
+                {[
+                  'Yes, budget approved and not yet spent',
+                  'Yes, budget approved and spent some',
+                  'Budget pending approval',
+                  'Not yet allocated/No budget'
+                ].map(opt => (
+                  <label key={opt} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.budget === opt ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
+                    <input
+                      type="radio"
+                      name="budget"
+                      value={opt}
+                      required
+                      checked={data.budget === opt}
+                      onChange={e => setData({ ...data, budget: e.target.value })}
+                      className="sr-only"
+                    />
+                    <span className={`text-sm font-bold ${data.budget === opt ? 'text-emerald-800' : 'text-gray-600'}`}>{opt}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* Column 3 */}
             <div className="flex flex-col h-full">
-               <div className="flex items-start gap-3 mb-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">3</div>
-                  <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
-                    Which job portals are you currently using for hiring? (Multiple choice)
-                  </h3>
-               </div>
-               <div className="space-y-3 flex-1 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
-                  {['AJobThing (Maukerja & Ricebowl)', 'Jobstreet', 'LinkedIn', 'Recruitment agency', 'Social media', 'Others'].map(portal => (
-                    <label key={portal} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.portals.includes(portal) ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
-                      <input 
-                        type="checkbox" 
-                        checked={data.portals.includes(portal)}
-                        onChange={() => togglePortal(portal)}
-                        className="sr-only"
-                      />
-                      <span className={`text-sm font-bold ${data.portals.includes(portal) ? 'text-emerald-800' : 'text-gray-600'}`}>{portal}</span>
-                    </label>
-                  ))}
-                  {data.portals.includes('Others') && (
-                    <input 
-                      type="text" 
-                      placeholder="Please specify..." 
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
-                      value={otherPortal}
-                      onChange={e => setOtherPortal(e.target.value)}
+              <div className="flex items-start gap-3 mb-4">
+                <div className="flex-shrink-0 w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold shadow-sm">3</div>
+                <h3 className="font-bold text-emerald-900 text-sm md:text-base leading-tight pt-1">
+                  Which job portals are you currently using for hiring? (Multiple choice)
+                </h3>
+              </div>
+              <div className="space-y-3 flex-1 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                {['AJobThing (Maukerja & Ricebowl)', 'Jobstreet', 'LinkedIn', 'Recruitment agency', 'Social media', 'Others'].map(portal => (
+                  <label key={portal} className={`block w-full p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 ${data.portals.includes(portal) ? 'bg-emerald-100 border-emerald-500 shadow-md' : 'bg-white border-gray-200 hover:border-emerald-300 hover:bg-gray-50'}`}>
+                    <input
+                      type="checkbox"
+                      checked={data.portals.includes(portal)}
+                      onChange={() => togglePortal(portal)}
+                      className="sr-only"
                     />
-                  )}
-               </div>
+                    <span className={`text-sm font-bold ${data.portals.includes(portal) ? 'text-emerald-800' : 'text-gray-600'}`}>{portal}</span>
+                  </label>
+                ))}
+                {data.portals.includes('Others') && (
+                  <input
+                    type="text"
+                    placeholder="Please specify..."
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none mt-2"
+                    value={otherPortal}
+                    onChange={e => setOtherPortal(e.target.value)}
+                  />
+                )}
+              </div>
             </div>
 
           </div>
@@ -1092,7 +1092,7 @@ const QualificationForm: React.FC<{ onSubmit: (data: QualificationData) => void 
 
         {/* Footer Action */}
         <div className="p-6 bg-gray-50 border-t border-gray-100 shrink-0">
-          <button 
+          <button
             onClick={handleSubmit}
             className="w-full py-4 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-400 font-extrabold text-2xl rounded-xl shadow-inner cursor-not-allowed transition-all data-[ready=true]:from-amber-400 data-[ready=true]:to-amber-500 data-[ready=true]:text-emerald-900 data-[ready=true]:shadow-xl data-[ready=true]:cursor-pointer data-[ready=true]:hover:-translate-y-1 data-[loading=true]:from-amber-300 data-[loading=true]:to-amber-400 data-[loading=true]:text-emerald-900 data-[loading=true]:cursor-wait"
             data-ready={!isSubmitting && !!(data.timeline && data.budget && data.portals.length > 0)}
@@ -1150,7 +1150,7 @@ const Confetti: React.FC = () => {
     let animationId: number;
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
@@ -1190,7 +1190,7 @@ const ResultView: React.FC<{
   const shareText = "I just played Rezeki Stack Raya! Can you beat my score?";
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8 text-center border-4 border-amber-400 relative"
@@ -1202,7 +1202,7 @@ const ResultView: React.FC<{
         <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
           <h3 className="font-bold text-emerald-800 mb-2 text-sm md:text-base">Guaranteed Reward</h3>
           <div className="h-40 flex items-center justify-center overflow-hidden rounded-lg shadow-sm bg-white">
-             <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-contain" />
+            <img src={ASSETS.voucher} alt="Voucher" className="w-full h-full object-contain" />
           </div>
           <p className="text-xs text-emerald-600 mt-2 font-semibold">Up to RM800 OFF AJobThing Voucher</p>
         </div>
@@ -1210,7 +1210,7 @@ const ResultView: React.FC<{
         <div className={`p-4 rounded-xl border ${stats.ticketCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-gray-100 border-gray-200 opacity-70'}`}>
           <h3 className="font-bold text-gray-800 mb-2 text-sm md:text-base">{stats.ticketCount} Lucky Draw Ticket</h3>
           <div className="h-40 flex items-center justify-center overflow-hidden rounded-lg shadow-sm bg-white">
-             <img src="https://files.ajt.my/images/marketing-campaign/image-5d30bd35-ceee-41fe-9553-1c580ad2a425.png" alt="Ticket" className={`w-full h-full object-contain ${stats.ticketCount === 0 && 'grayscale'}`} />
+            <img src="https://files.ajt.my/images/marketing-campaign/image-5d30bd35-ceee-41fe-9553-1c580ad2a425.png" alt="Ticket" className={`w-full h-full object-contain ${stats.ticketCount === 0 && 'grayscale'}`} />
           </div>
           <p className="text-xs text-gray-600 mt-2 font-semibold">
             {stats.ticketCount > 0 ? "You're in Lucky Draw!" : 'Ticket not collected this time.'}
@@ -1231,19 +1231,19 @@ const ResultView: React.FC<{
 
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4">
-          <button 
+          <button
             onClick={() => { onClickTrack('click_whatsapp'); window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank'); }}
             className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 text-xs md:text-sm font-bold"
           >
             <Share2 size={16} /> WhatsApp
           </button>
-          <button 
+          <button
             onClick={() => { onClickTrack('click_linkedin'); window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank'); }}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 text-xs md:text-sm font-bold"
           >
             <Share2 size={16} /> LinkedIn
           </button>
-          <button 
+          <button
             onClick={() => { onClickTrack('click_facebook'); window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank'); }}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 text-xs md:text-sm font-bold"
           >
@@ -1251,18 +1251,18 @@ const ResultView: React.FC<{
           </button>
         </div>
 
-        <a 
-          href="https://www.ajobthing.com/login?redirect=/campaign/rewards" 
-          target="_blank" 
+        <a
+          href="https://www.ajobthing.com/login?redirect=/campaign/rewards"
+          target="_blank"
           rel="noreferrer"
           onClick={() => onClickTrack('click_morerezeki')}
           className="block w-full bg-gradient-to-r from-amber-400 to-amber-500 text-emerald-900 font-bold text-lg md:text-xl py-3 md:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all"
         >
           Want More Rezeki? Click Here
         </a>
-        
+
         <div className="text-center mt-2">
-          <p className="text-xs text-gray-600 font-semibold">Winners announcement on 11 March 2026</p>
+          <p className="text-xs text-gray-600 font-semibold">Winners announcement on 12 March 2026</p>
           <a href="https://www.whatsapp.com/channel/0029VadYIsPB4hdYGIn57X2H" target="_blank" rel="noreferrer" className="text-xs text-emerald-600 hover:text-emerald-700 font-bold underline">
             Join WhatsApp Channel
           </a>
