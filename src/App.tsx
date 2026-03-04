@@ -1262,7 +1262,7 @@ const ResultView: React.FC<{
         </a>
 
         <div className="text-center mt-2">
-          <p className="text-xs text-gray-600 font-semibold">Winners announcement on 11 March 2026</p>
+          <p className="text-xs text-gray-600 font-semibold">Winners announcement on 12 March 2026</p>
           <a href="https://www.whatsapp.com/channel/0029VadYIsPB4hdYGIn57X2H" target="_blank" rel="noreferrer" className="text-xs text-emerald-600 hover:text-emerald-700 font-bold underline">
             Join WhatsApp Channel
           </a>
